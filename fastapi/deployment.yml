@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myfastapi-app-svc
+spec:
+  selector:
+    app: myfastapi-app
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+# myfastapi-app Deployment
+# Defines the deployment of the app running in a pod on any worker node
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myfastapi-app
+  labels:
+    app: myfastapi-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myfastapi-app
+  template:
+    metadata:
+      labels:
+        app: myfastapi-app
+    spec:
+      containers:
+        - name: myfastapi-app
+          image: myfastapi-app:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: IfNotPresent
